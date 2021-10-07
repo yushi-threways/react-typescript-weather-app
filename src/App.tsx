@@ -1,8 +1,10 @@
 import Title from './components/Title';
 import Form from './components/Form';
 import Results from './components/Results';
+import Loading from './components/Loading';
 import './App.css';
 import { useState } from "react";
+
 
   type ResultsStateType = {
     country: string,
@@ -13,7 +15,8 @@ import { useState } from "react";
   }
 
 function App() {
-
+  // ロード中の真偽値
+  const [loading, setLoading] = useState<boolean>(false);
   // city ユーザーが入力してしたデータを保管する
   const [city, setCity] = useState<string>("");
 
@@ -28,6 +31,7 @@ function App() {
   const getWeather = (e: React.FormEvent<HTMLFormElement>) => {
       // formの本来の動きを止める
       e.preventDefault();
+      setLoading(true);
       
       fetch(
           `https://api.weatherapi.com/v1/current.json?key=701cb2f152774df6a31172726210610&q=${city}&aqi=no`
@@ -42,15 +46,19 @@ function App() {
           conditionText: data.current.condition.text,
           icon: data.current.condition.icon,
         })
+        // フォームの中を空にする
+        setCity("");
+        setLoading(false);
       })
+      .catch(err => alert("エラーが発生しました。ページをリロードして、もう一度トライしてください。"))
   }
 
   return (
     <div className="wrapper">
       <div className="container">
         <Title />
-        <Form setCity={setCity} getWeather={getWeather} />
-        <Results results={results} />
+        <Form setCity={setCity} getWeather={getWeather} city={city} />
+        {loading ? <Loading /> : <Results results={results} />}
       </div>
     </div>
   );
