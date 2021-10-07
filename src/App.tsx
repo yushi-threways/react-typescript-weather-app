@@ -25,12 +25,12 @@ function App() {
     icon: ""
   });
 
-  const getWeather = (e: any) => {
+  const getWeather = (e: React.FormEvent<HTMLFormElement>) => {
       // formの本来の動きを止める
       e.preventDefault();
       
       fetch(
-          "https://api.weatherapi.com/v1/current.json?key=701cb2f152774df6a31172726210610&q=London&aqi=no"
+          `https://api.weatherapi.com/v1/current.json?key=701cb2f152774df6a31172726210610&q=${city}&aqi=no`
       ).then(
           res => res.json()
           // jsonへ書き換え
@@ -46,10 +46,12 @@ function App() {
   }
 
   return (
-    <div className="test">
-      <Title />
-      <Form setCity={setCity} getWeather={getWeather} />
-      <Results results={results} />
+    <div className="wrapper">
+      <div className="container">
+        <Title />
+        <Form setCity={setCity} getWeather={getWeather} />
+        <Results results={results} />
+      </div>
     </div>
   );
 }
