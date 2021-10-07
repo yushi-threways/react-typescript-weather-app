@@ -1,30 +1,19 @@
-import { useState } from "react";
 
-const Form = () => {
-    // city ユーザーが入力してしたデータを保管する
-    const [city, setCity] = useState<string>("");
-    const getWeather = (e: any) => {
-        // formの本来の動きを止める
-        e.preventDefault();
-        
-        fetch(
-            "https://api.weatherapi.com/v1/current.json?key=701cb2f152774df6a31172726210610&q=London&aqi=no"
-        ).then(
-            res => res.json()
-            // jsonへ書き換え
-        ).then(data => console.log(data));
-        
-        ; 
-    };
+type FormPropsType = {
+    setCity:React.Dispatch<React.SetStateAction<string>>
+    getWeather:(e: any) => void
+}
+
+const Form = (props: FormPropsType) => {
     return(
         <form>
             <input 
             type="text" 
             name="city" 
             placeholder="都市名" 
-            onChange={e => setCity(e.target.value)}
+            onChange={e => props.setCity(e.target.value)}
             />
-            <button type="submit" onClick={getWeather}>Get Weather</button>
+            <button type="submit" onClick={props.getWeather}>Get Weather</button>
         </form>
     );
 }
